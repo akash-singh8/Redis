@@ -19,5 +19,13 @@
   "bugs": {
     "url": "https://github.com/akash-singh8/Redis/issues"
   },
-  "homepage": "https://github.com/akash-singh8/Redis#readme"
+  "homepage": "https://github.com/akash-singh8/Redis#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "redis": "^4.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
