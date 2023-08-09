@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server to test & learn Redis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akash-singh8/Redis.git"
+  },
+  "keywords": [
+    "nodejs",
+    "redis"
+  ],
+  "author": "Akash Singh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akash-singh8/Redis/issues"
+  },
+  "homepage": "https://github.com/akash-singh8/Redis#readme"
+}
