@@ -3,8 +3,13 @@ const redis = require("ioredis");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
+const userRouter = require("./routes/users.js");
+
 const app = express();
 dotenv.config();
+
+app.use(express.json());
+app.use("/", userRouter);
 
 const PORT = process.env.PORT || 3000;
 const redisClient = new redis();
