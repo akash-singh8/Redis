@@ -1,6 +1,7 @@
 const express = require("express");
 const redis = require("ioredis");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 
 const app = express();
 dotenv.config();
@@ -8,6 +9,9 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 const redisClient = new redis();
 
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("--- Database Connected ---"));
 
 app.get("/", async (req, res) => {
   const key = "name";
