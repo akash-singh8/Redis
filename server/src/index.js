@@ -1,5 +1,5 @@
 const express = require("express");
-const redis = require('ioredis');
+const redis = require("ioredis");
 const dotenv = require("dotenv");
 
 const app = express();
@@ -17,26 +17,23 @@ app.get("/", async (req, res) => {
 
     // check if data exists then use it, else fetch from db and store in cache
     if (data != null) {
-
       const response = {
-        "message": "Found data"
-      }
+        message: "Found data",
+      };
       response[key] = data;
 
       return res.json(response);
     } else {
       // make request to database and store in cache
       redisClient.set(key, "Akash");
-      return res.json({ "message": "Added data" });
+      return res.json({ message: "Added data" });
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
   }
 
   res.status(404).json({ message: "Not Found" });
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
