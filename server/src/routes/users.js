@@ -28,7 +28,31 @@ userRouter.post("/signup", async (req, res) => {
     });
     res.json({ message: "User registered successfully", authToken: token });
   } catch (err) {
-    console.error("Error during user signup:", error);
+    console.error("Error during user signup:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+userRouter.post("/login", async (req, res) => {
+  const { AADHAR_NO, password } = req.body;
+
+  try {
+    const user = await Users.findOne({ AADHAR_NO });
+
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.json({ message: "Logged", authToken: token });
+  } catch (err) {
+    console.error("Error during user login:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
