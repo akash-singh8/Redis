@@ -11,19 +11,35 @@ userRouter.post("/signup", async (req, res) => {
   const { AADHAR_NO, password, village_name } = req.body;
 
   try {
-    const user = await Users.findOne({ AADHAR_NO });
+    let user = await redisClient.get(AADHAR_NO);
+
+    // check for user in the database
+    if (!user) {
+      user = await Users.findOne({ AADHAR_NO })
+      if (user) {
+        redisClient.set(user.AADHAR_NO, JSON.stringify({
+          password: user.password,
+          village_name: user.village_name
+        }))
+      }
+    }
 
     if (user) {
       return res.status(409).json({ message: "User already exists" });
     }
 
     const hashed_password = await bcrypt.hash(password, 10);
-    const newUser = new Users({
-      AADHAR_NO,
+    const userData = {
       password: hashed_password,
       village_name,
+    }
+    const newUser = new Users({
+      AADHAR_NO,
+      ...userData
     });
     await newUser.save();
+
+    redisClient.set(AADHAR_NO, JSON.stringify(userData));
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
