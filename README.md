@@ -23,3 +23,53 @@ If the same data is requested by multiple users or the same user again, the serv
 Subsequent requests for the same data can now be served directly from the Redis cache, eliminating the need to query the database again.
 
 By using Redis as a cache, we can significantly reduce the number of database queries and speed up the response times of our application. This is especially effective for scenarios where the data doesn't change frequently or where certain data is accessed very frequently.
+
+<br>
+  
+## Run Locally
+
+### Prerequisites
+
+- **Node version 18.x**
+- **Redis**
+
+### Cloning the repository
+
+```shell
+git clone https://github.com/akash-singh8/Redis.git
+```
+
+### Install packages
+
+```shell
+cd Redis/server
+npm install
+```
+
+### Setup .env file
+
+```js
+PORT=5050
+MONGODB_URI= <mongodb_uri>
+JWT_SECRET=letsgoo
+```
+
+### Start Redis server
+
+```shell
+sudo service redis-server start
+```
+
+### Start the app
+
+```shell
+npm run start
+```
+
+## Available commands
+
+Running commands with npm `npm run [command]`
+
+| command         | description                              |
+| :-------------- | :--------------------------------------- |
+| `start`           | Starts a development instance of the app |
