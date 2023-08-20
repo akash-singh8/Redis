@@ -1,9 +1,11 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const redis = require("ioredis")
 const { Users } = require("../models/Users.js");
 
 const userRouter = express.Router();
+const redisClient = new redis();
 
 userRouter.post("/signup", async (req, res) => {
   const { AADHAR_NO, password, village_name } = req.body;
@@ -35,12 +37,26 @@ userRouter.post("/signup", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   const { AADHAR_NO, password } = req.body;
-
   try {
-    const user = await Users.findOne({ AADHAR_NO });
+    /* 
+     We need to check if the user exists in cache or not 
+     if yes we'll use the result from cache instead making request to db
+     if it doens't then we'll fetch the data from db and update it in cache
+     and here we'll be using AADHAR_NO as a key and user's data as value
+    */
+    let user = JSON.parse(await redisClient.get(AADHAR_NO));
 
     if (!user) {
-      return res.status(404).json({ message: "User does not exist" });
+      const userDB = await Users.findOne({ AADHAR_NO: parseInt(AADHAR_NO) });
+      if (!userDB) {
+        return res.status(404).json({ message: "User does not exist" });
+      }
+
+      user = {
+        password: userDB.password,
+        village_name: userDB.village_name
+      }
+      redisClient.set(AADHAR_NO, JSON.stringify(user))
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
